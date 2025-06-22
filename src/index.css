@@ -8,11 +8,11 @@ body {
   @apply bg-parchment text-rum font-pirate;
 }
 
-.animate-coin {
-  animation: coin 2s ease-out forwards;
-}
-
 @keyframes coin {
   0% { transform: translateY(0) scale(1); opacity: 1; }
   100% { transform: translateY(-300px) scale(0.5); opacity: 0; }
+}
+
+.animate-coin {
+  animation: coin 2s ease-out forwards;
 }

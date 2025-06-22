@@ -1,35 +1,45 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: {
-    extend: {
-      colors: {
-        treasure: '#FFD700',
-        rum: '#8B4513',
-        parchment: '#fef08a',
-        sea: '#1E3A8A',
-        seafoam: '#a3c7c7',
-        brass: '#bfa46f',
-        bloodred: '#661111',
-        ocean: '#0a2239',
-        smoke: '#f5f5dc',
-      },
-      fontFamily: {
-        pirate: ['"Pirata One"', 'cursive'],
-      },
-      backgroundImage: {
-        'vintage-paper': "url('/vintage-paper-texture.jpg')", // This image must be in /public
-      },
-      keyframes: {
-        coin: {
-          "0%": { transform: "translateY(0) scale(1)", opacity: "1" },
-          "100%": { transform: "translateY(-300px) scale(0.5)", opacity: "0" },
-        },
-      },
-      animation: {
-        coin: "coin 2s ease-out forwards",
-      },
-    },
-  },
-  plugins: [],
-};
+import React, { useState, useEffect } from 'react';
+import CocktailMenu from './CocktailMenu';
+import LoadingScreen from './LoadingScreen';
+import './styles.css';
+export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) return <LoadingScreen />;
+
+  return (
+    <div className="min-h-screen bg-parchment text-sea bg-vintage-paper bg-cover bg-fixed font-pirate">
+      <header className="text-center py-12">
+        <h1 className="text-5xl text-rum drop-shadow-lg">🏴‍☠️ The Drunken Parrot</h1>
+        <p className="mt-2 italic text-lg text-treasure">Sail in for a legendary sip...</p>
+      </header>
+
+      <main className="max-w-4xl mx-auto px-4 relative">
+        <div className="absolute bottom-4 left-4 text-4xl rotate-[15deg] opacity-30">☠️</div>
+        <CocktailMenu />
+      </main>
+
+      <footer className="text-center py-8 text-sm text-sea/80 italic">
+        © 1725 - The Drunken Parrot Tavern. All Rights Reserved.
+      </footer>
+    </div>
+  );
+}
+<div className="relative min-h-screen bg-[url('/images/treasure-map.jpg')] bg-cover bg-center text-sea font-pirate">
+  {/* Burned edge overlay */}
+  <img
+    src="/images/burned-edges.png"
+    alt="Burned edges"
+    className="pointer-events-none absolute inset-0 w-full h-full object-cover z-10"
+  />
+
+  {/* Main content */}
+  <div className="relative z-20">
+    {/* header, main, footer go here */}
+  </div>
+</div>

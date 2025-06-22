@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Pirata+One&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apply global font and background */
+body {
+  @apply bg-parchment text-rum font-pirate;
+  background-image: url('/images/treasure-map.jpg'), url('/images/burned-edges.png');
+  background-size: cover, contain;
+  background-repeat: no-repeat;
+  background-position: center, center;
+  background-blend-mode: overlay;
+  min-height: 100vh;
+  font-family: 'Pirata One', cursive;
+}
+
+/* Custom class for parchment background color (defined in Tailwind config) */
+.bg-parchment {
+  background-color: #f8f1dc;
+}
+
+/* Optional: Torn border styling (used inline in JSX, but you can reuse here) */
+.torn-border {
+  border: 2px solid transparent;
+  border-image: url('/images/torn-border.png') 20 fill / 10px / 10px stretch;
+}
+
+/* Stamp animation for “X marks the spot” */
+@keyframes stamp {
+  0% {
+    transform: scale(3) rotate(-20deg);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1) rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.animate-stamp {
+  animation: stamp 0.6s ease-out;
+}
+
+/* Coin drop animation if needed */
+@keyframes coin {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-300px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.animate-coin {
+  animation: coin 2s ease-out forwards;
+}
