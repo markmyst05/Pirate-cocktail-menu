@@ -18,7 +18,7 @@ module.exports = {
         pirate: ['"Pirata One"', 'cursive'],
       },
       backgroundImage: {
-        'vintage-paper': "url('/vintage-paper-texture.jpg')", // This image must be in /public
+        'vintage-paper': "url('/vintage-paper-texture.jpg')",
       },
       keyframes: {
         coin: {
