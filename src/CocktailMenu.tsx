@@ -64,28 +64,40 @@ export default function CocktailMenu() {
 
     import('html2pdf.js').then(html2pdf => {
       const options = {
-        margin: 0.5,
+        margin: [0.5, 0.5, 0.5, 0.5],
         filename: 'captains-menu.pdf',
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
-          scale: 2,
+          scale: 1,
           useCORS: true,
-          allowTaint: true
+          allowTaint: true,
+          backgroundColor: '#f8f1dc',
+          logging: false
         },
         jsPDF: { 
           unit: 'in', 
-          format: 'letter', 
-          orientation: 'portrait' 
-        },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+          format: 'a4', 
+          orientation: 'portrait',
+          putOnlyUsedFonts: true
+        }
       };
 
       html2pdf.default()
         .set(options)
         .from(element)
-        .save()
-        .then(() => {
-          console.log('PDF generated successfully');
+        .outputPdf('blob')
+        .then((pdfBlob) => {
+          // Create download link manually
+          const url = URL.createObjectURL(pdfBlob);
+          const downloadLink = document.createElement('a');
+          downloadLink.href = url;
+          downloadLink.download = 'captains-menu.pdf';
+          downloadLink.style.display = 'none';
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+          URL.revokeObjectURL(url);
+          console.log('PDF downloaded successfully');
         })
         .catch((error) => {
           console.error('PDF generation failed:', error);
