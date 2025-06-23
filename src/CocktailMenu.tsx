@@ -173,7 +173,7 @@ export default function CocktailMenu() {
               >
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="text-2xl font-bold text-yellow-800 mb-1">🍹 {c.name}</p>
+                    <p className="text-2xl font-bold text-red-500 mb-1">🍹 {c.name}</p>
                     <p className="italic text-blue-700">📜 Pirate Brew: {c.ingredientsPirate}</p>
                     <p className="text-blue-600">🧾 Translation: {c.ingredientsNormal}</p>
                   </div>
@@ -185,17 +185,9 @@ export default function CocktailMenu() {
                   </button>
                 </div>
               </li>
-            ))}
+            
+))}
           </ul>
-
-          {/* QR Code */}
-          <div className="flex justify-center mt-8">
-            <img
-              src="/pirate_menu_qr.png"
-              alt="QR Code"
-              className="w-24 h-24"
-            />
-          </div>
         </section>
       )}
     </div>
