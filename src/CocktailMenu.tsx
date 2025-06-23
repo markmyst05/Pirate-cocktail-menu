@@ -172,32 +172,4 @@ export default function CocktailMenu() {
       )}
     </div>
   );
-} 
-          {/* Pirate Logo */}
-          <div className="absolute -top-14 left-1/2 transform -translate-x-1/2">
-            <img
-              src="/pirate-logo.png"
-              alt="Pirate Logo"
-              className="w-24 h-24 rounded-full border-4 border-yellow-800 shadow-lg bg-yellow-200"/>
-          </div>
-
-          <h2 className="text-4xl mt-12 mb-6 text-yellow-900 font-extrabold text-center tracking-widest underline decoration-wavy decoration-yellow-800">
-            ☠️ Captain’s Menu ☠️
-          </h2>
-
-          <ul className="space-y-5">
-            {cocktails.map((c, i) => (
-              <li
-                key={i}
-                className="bg-transparent border-none p-4 hover:scale-[1.02] transition-all"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-2xl font-bold text-yellow-800 mb-1">🍹 {c.name}</p>
-                    <p className="italic text-gray-800">📜 Pirate Brew: {c.ingredientsPirate}</p>
-                    <p className="text-gray-700">🧾 Translation: {c.ingredientsNormal}</p>
-                  </div>
-                  <button
-                    onClick={() => remove(i)}
-                    className="text-red-700 hover:text-red-900 font-bold text-xl"
-                    
+}
