@@ -139,7 +139,8 @@ export default function CocktailMenu() {
           {showMenu ? "Hide Captain's Menu 🫥" : "Show Captain's Menu ☠️"}
         </button>
 
-        <button onClick={generatePDF}>Export as PDF</button>
+        <button
+          onClick={generatePDF}
           className="bg-green-600 text-white px-4 py-2 rounded"
         >
           📜 Download Captain's Menu (PDF)
