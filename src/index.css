@@ -15,4 +15,7 @@ body {
 
 .animate-coin {
   animation: coin 2s ease-out forwards;
+}/* Hide ❌ buttons only during PNG export */
+.exporting .no-export {
+  display: none !important;
 }

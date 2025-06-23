@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { pirateify } from './utils/pirateify';
+import html2canvas from 'html2canvas';
 
 // Debounce hook
 function useDebounce<T>(value: T, delay = 300): T {
@@ -11,7 +12,6 @@ function useDebounce<T>(value: T, delay = 300): T {
   return debounced;
 }
 
-// Types
 type Cocktail = {
   name: string;
   ingredientsPirate: string;
@@ -54,7 +54,16 @@ export default function CocktailMenu() {
     }
   }, [cocktails]);
 
-  function generatePDF() {
+  const exportPNG = () => {
+    if (!showMenu) {
+      setShowMenu(true);
+      setTimeout(() => actuallyExportPNG(), 100);
+    } else {
+      actuallyExportPNG();
+    }
+  };
+
+  const actuallyExportPNG = () => {
     const element = document.getElementById('menu-section');
     if (!element) {
       console.error('❌ Menu section not found');
@@ -64,62 +73,31 @@ export default function CocktailMenu() {
     }
 
     setDownloading(true);
-    setToast('🧾 Preparing your Captain’s Menu PDF...');
+    setToast('📸 Capturing your Captain’s Menu...');
+    document.body.classList.add('exporting');
 
-    import('html2pdf.js')
-      .then(html2pdf => {
-        const options = {
-          margin: [0.5, 0.5, 0.5, 0.5],
-          filename: 'captains-menu.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: '#f8f1dc',
-            logging: false,
-          },
-          jsPDF: {
-            unit: 'in',
-            format: 'a4',
-            orientation: 'portrait',
-            putOnlyUsedFonts: true,
-          },
-        };
-
-        html2pdf
-          .default()
-          .set(options)
-          .from(element)
-          .outputPdf('blob')
-          .then(pdfBlob => {
-            const url = URL.createObjectURL(pdfBlob);
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = 'captains-menu.pdf';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(url);
-            console.log('✅ PDF downloaded successfully');
-            setToast('✅ Captain’s Menu downloaded!');
-          })
-          .catch(error => {
-            console.error('PDF generation failed:', error);
-            setToast('❌ Failed to download the Captain’s Menu!');
-          })
-          .finally(() => {
-            setDownloading(false);
-            setTimeout(() => setToast(''), 3000);
-          });
+    html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#f8f1dc',
+    })
+      .then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'captains-menu.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        setToast('✅ Captain’s Menu PNG downloaded!');
       })
       .catch(error => {
-        console.error('Failed to load html2pdf.js:', error);
-        setToast('❌ Could not load PDF generator.');
+        console.error('PNG export failed:', error);
+        setToast('❌ Failed to download the Captain’s Menu!');
+      })
+      .finally(() => {
+        document.body.classList.remove('exporting');
         setDownloading(false);
         setTimeout(() => setToast(''), 3000);
       });
-  }
+  };
 
   const add = (e: React.FormEvent) => {
     e.preventDefault();
@@ -177,7 +155,7 @@ export default function CocktailMenu() {
         <p className="text-center text-green-700 font-bold mb-4 no-print">{toast}</p>
       )}
 
-      {/* Toggle & PDF Button */}
+      {/* Toggle & PNG Button */}
       <div className="text-center mb-6 flex flex-col items-center gap-4 no-print">
         <button
           onClick={() => setShowMenu(prev => !prev)}
@@ -187,11 +165,11 @@ export default function CocktailMenu() {
         </button>
 
         <button
-          onClick={generatePDF}
+          onClick={exportPNG}
           className="bg-green-600 text-white px-4 py-2 rounded"
           disabled={downloading}
         >
-          📜 Download Captain's Menu (PDF)
+          📸 Download Captain's Menu (PNG)
         </button>
       </div>
 
@@ -202,7 +180,7 @@ export default function CocktailMenu() {
           className="relative border-[6px] border-yellow-700 shadow-2xl rounded-3xl p-8 max-w-3xl mx-auto font-pirate text-rum bg-cover bg-center"
           style={{ backgroundImage: "url('/vintage-paper-texture.jpg')" }}
         >
-          <div className="absolute -top-14 left-1/2 transform -translate-x-1/2">
+          <div className="flex justify-center mb-4">
             <img
               src="/pirate-logo.png"
               alt="Pirate Logo"
@@ -210,7 +188,7 @@ export default function CocktailMenu() {
             />
           </div>
 
-          <h2 className="text-4xl mt-12 mb-6 text-yellow-900 font-extrabold text-center tracking-widest underline decoration-wavy decoration-yellow-800">
+          <h2 className="text-4xl mb-6 text-yellow-900 font-extrabold text-center tracking-widest underline decoration-wavy decoration-yellow-800">
             ☠️ Captain's Menu ☠️
           </h2>
 
@@ -225,7 +203,7 @@ export default function CocktailMenu() {
                   </div>
                   <button
                     onClick={() => remove(i)}
-                    className="text-red-700 hover:text-red-900 font-bold text-xl no-print"
+                    className="text-red-700 hover:text-red-900 font-bold text-xl no-print no-export"
                   >
                     ❌
                   </button>
