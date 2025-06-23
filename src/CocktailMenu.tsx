@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { pirateify } from './utils/pirateify';
 
+// Types
 type Cocktail = {
   name: string;
   ingredientsPirate: string;
   ingredientsNormal: string;
 };
 
+// Typewriter hook
 function useTypewriter(text: string, speed = 40) {
   const [displayed, setDisplayed] = useState('');
 
@@ -22,6 +24,16 @@ function useTypewriter(text: string, speed = 40) {
   }, [text]);
 
   return displayed;
+}
+
+// Debounce hook
+function useDebounce<T>(value: T, delay = 300): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
 }
 
 export default function CocktailMenu() {
@@ -51,7 +63,8 @@ export default function CocktailMenu() {
   const [toast, setToast] = useState('');
   const [showMenu, setShowMenu] = useState(true);
 
-  const piratePreview = useTypewriter(pirateify(ingNormal));
+  const debouncedIng = useDebounce(ingNormal, 300);
+  const piratePreview = useTypewriter(pirateify(debouncedIng), 30);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -61,8 +74,8 @@ export default function CocktailMenu() {
 
   const add = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !ingNormal.trim()) return;
     const ingPirate = pirateify(ingNormal);
+    if (!name.trim() || !ingNormal.trim()) return;
     setCocktails([
       ...cocktails,
       {
@@ -86,6 +99,7 @@ export default function CocktailMenu() {
 
   return (
     <div className="p-6 font-pirate text-rum">
+      {/* Form */}
       <form onSubmit={add} className="flex flex-col gap-4 mb-6 max-w-3xl mx-auto">
         <input
           className="border px-4 py-2 rounded"
@@ -104,18 +118,17 @@ export default function CocktailMenu() {
             🏴‍☠️ Arrr! Becomes: <span className="font-bold">{piratePreview}</span>
           </p>
         )}
-        <button
-          type="submit"
-          className="bg-yellow-600 text-white px-4 py-2 rounded"
-        >
+        <button className="bg-yellow-600 text-white px-4 py-2 rounded">
           ⚓ Add Potion
         </button>
       </form>
 
+      {/* Toast */}
       {toast && (
         <p className="text-center text-green-700 font-bold mb-4">{toast}</p>
       )}
 
+      {/* Toggle */}
       <div className="text-center mb-6">
         <button
           onClick={() => setShowMenu(prev => !prev)}
@@ -125,6 +138,7 @@ export default function CocktailMenu() {
         </button>
       </div>
 
+      {/* Menu */}
       {showMenu && (
         <section
           className="relative border-[6px] border-yellow-700 shadow-2xl rounded-3xl p-8 max-w-3xl mx-auto font-pirate text-rum bg-cover bg-center"

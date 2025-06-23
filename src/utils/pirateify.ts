@@ -1,22 +1,34 @@
-import { pirateDict } from './pirateDictionary';
+import pirateDict from './pirateDictionary';
 
-const pirateExclamations = [
-  "Arrr!", "Yo-ho-ho!", "Shiver me timbers!", "Blimey!", "Ahoy!", "Ye scallywag!", "Avast!"
-];
-
-const pirateEmojis = ["🏴‍☠️", "⚓", "🍹", "💀", "🦜", "🪙", "🦈"];
+function preserveCapitalization(original: string, replacement: string): string {
+  if (original[0] === original[0].toUpperCase()) {
+    return replacement[0].toUpperCase() + replacement.slice(1);
+  }
+  return replacement;
+}
 
 export function pirateify(text: string): string {
-  let pirateText = text.toLowerCase();
+  return text
+    .split(/\b/)
+    .map(chunk => {
+      const trimmed = chunk.trim();
+      if (!trimmed) return chunk;
 
-  for (const [normal, pirate] of Object.entries(pirateDict)) {
-    const pattern = new RegExp(`\\b${normal}\\b`, 'gi');
-    pirateText = pirateText.replace(pattern, pirate);
-  }
+      // Extract punctuation
+      const match = chunk.match(/^(\W*)(\w+)(\W*)$/);
+      if (!match) return chunk;
 
-  // Add a random pirate exclamation and emoji to the end
-  const randomExclamation = pirateExclamations[Math.floor(Math.random() * pirateExclamations.length)];
-  const randomEmoji = pirateEmojis[Math.floor(Math.random() * pirateEmojis.length)];
+      const [, leadingPunct = '', coreWord = '', trailingPunct = ''] = match;
 
-  return `${pirateText.charAt(0).toUpperCase()}${pirateText.slice(1)} ${randomExclamation} ${randomEmoji}`;
+      const lower = coreWord.toLowerCase();
+      const translated = pirateDict[lower];
+
+      if (translated) {
+        const preserved = preserveCapitalization(coreWord, translated);
+        return `${leadingPunct}${preserved}${trailingPunct}`;
+      }
+
+      return chunk;
+    })
+    .join('');
 }
