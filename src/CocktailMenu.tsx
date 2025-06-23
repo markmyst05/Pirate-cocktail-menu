@@ -57,20 +57,41 @@ export default function CocktailMenu() {
 
   function generatePDF() {
     const element = document.getElementById('menu-section');
-    if (!element) return;
+    if (!element) {
+      console.error('Menu section not found');
+      return;
+    }
 
     import('html2pdf.js').then(html2pdf => {
-    
+      const options = {
+        margin: 0.5,
+        filename: 'captains-menu.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          allowTaint: true
+        },
+        jsPDF: { 
+          unit: 'in', 
+          format: 'letter', 
+          orientation: 'portrait' 
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+
       html2pdf.default()
-  .set({
-    margin: 0,
-    filename: 'captains-menu.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-  })
-  .from(element)
-  .save();
+        .set(options)
+        .from(element)
+        .save()
+        .then(() => {
+          console.log('PDF generated successfully');
+        })
+        .catch((error) => {
+          console.error('PDF generation failed:', error);
+        });
+    }).catch((error) => {
+      console.error('Failed to load html2pdf.js:', error);
     });
   }
 
