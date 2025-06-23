@@ -1,4 +1,4 @@
-import { pirateDict } from './pirateDictionary';
+import pirateDict from './pirateDictionary';
 
 function preserveCapitalization(original: string, replacement: string): string {
   if (original[0] === original[0].toUpperCase()) {
@@ -7,30 +7,25 @@ function preserveCapitalization(original: string, replacement: string): string {
   return replacement;
 }
 
+function chooseRandom(value: string | string[]): string {
+  if (Array.isArray(value)) {
+    return value[Math.floor(Math.random() * value.length)];
+  }
+  return value;
+}
+
 export function pirateify(text: string): string {
-  if (!text) return '';
+  let result = text;
 
-  return text
-    .split(/\b/)
-    .map(chunk => {
-      const trimmed = chunk.trim();
-      if (!trimmed) return chunk;
+  // Handle phrase replacements first (longest first)
+  const phrases = Object.keys(pirateDict).sort((a, b) => b.length - a.length);
+  for (const phrase of phrases) {
+    const regex = new RegExp(`\\b${phrase}\\b`, 'gi');
+    result = result.replace(regex, (match) => {
+      const pirateWord = pirateDict[phrase];
+      return preserveCapitalization(match, chooseRandom(pirateWord));
+    });
+  }
 
-      // Extract punctuation
-      const match = chunk.match(/^(\W*)(\w+)(\W*)$/);
-      if (!match) return chunk;
-
-      const [, leadingPunct = '', coreWord = '', trailingPunct = ''] = match;
-
-      const lower = coreWord.toLowerCase();
-      const translated = pirateDict[lower];
-
-      if (translated) {
-        const preserved = preserveCapitalization(coreWord, translated);
-        return `${leadingPunct}${preserved}${trailingPunct}`;
-      }
-
-      return chunk;
-    })
-    .join('');
+  return result;
 }
