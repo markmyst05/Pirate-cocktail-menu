@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { pirateify } from './utils/pirateify';
 
@@ -45,7 +44,7 @@ export default function CocktailMenu() {
   const [ingNormal, setIngNormal] = useState('');
   const [toast, setToast] = useState('');
   const [showMenu, setShowMenu] = useState(true);
-
+  const [downloading, setDownloading] = useState(false);
   const debouncedIng = useDebounce(ingNormal, 300);
   const piratePreview = pirateify(debouncedIng);
 
@@ -58,67 +57,83 @@ export default function CocktailMenu() {
   function generatePDF() {
     const element = document.getElementById('menu-section');
     if (!element) {
-      console.error('Menu section not found');
+      console.error('❌ Menu section not found');
+      setToast("⚠️ Couldn't find the Captain's Menu!");
+      setTimeout(() => setToast(''), 2000);
       return;
     }
 
-    import('html2pdf.js').then(html2pdf => {
-      const options = {
-        margin: [0.5, 0.5, 0.5, 0.5],
-        filename: 'captains-menu.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 1,
-          useCORS: true,
-          allowTaint: true,
-          backgroundColor: '#f8f1dc',
-          logging: false
-        },
-        jsPDF: { 
-          unit: 'in', 
-          format: 'a4', 
-          orientation: 'portrait',
-          putOnlyUsedFonts: true
-        }
-      };
+    setDownloading(true);
+    setToast('🧾 Preparing your Captain’s Menu PDF...');
 
-      html2pdf.default()
-        .set(options)
-        .from(element)
-        .outputPdf('blob')
-        .then((pdfBlob) => {
-          // Create download link manually
-          const url = URL.createObjectURL(pdfBlob);
-          const downloadLink = document.createElement('a');
-          downloadLink.href = url;
-          downloadLink.download = 'captains-menu.pdf';
-          downloadLink.style.display = 'none';
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          document.body.removeChild(downloadLink);
-          URL.revokeObjectURL(url);
-          console.log('PDF downloaded successfully');
-        })
-        .catch((error) => {
-          console.error('PDF generation failed:', error);
-        });
-    }).catch((error) => {
-      console.error('Failed to load html2pdf.js:', error);
-    });
+    import('html2pdf.js')
+      .then(html2pdf => {
+        const options = {
+          margin: [0.5, 0.5, 0.5, 0.5],
+          filename: 'captains-menu.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#f8f1dc',
+            logging: false,
+          },
+          jsPDF: {
+            unit: 'in',
+            format: 'a4',
+            orientation: 'portrait',
+            putOnlyUsedFonts: true,
+          },
+        };
+
+        html2pdf
+          .default()
+          .set(options)
+          .from(element)
+          .outputPdf('blob')
+          .then(pdfBlob => {
+            const url = URL.createObjectURL(pdfBlob);
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'captains-menu.pdf';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+            console.log('✅ PDF downloaded successfully');
+            setToast('✅ Captain’s Menu downloaded!');
+          })
+          .catch(error => {
+            console.error('PDF generation failed:', error);
+            setToast('❌ Failed to download the Captain’s Menu!');
+          })
+          .finally(() => {
+            setDownloading(false);
+            setTimeout(() => setToast(''), 3000);
+          });
+      })
+      .catch(error => {
+        console.error('Failed to load html2pdf.js:', error);
+        setToast('❌ Could not load PDF generator.');
+        setDownloading(false);
+        setTimeout(() => setToast(''), 3000);
+      });
   }
 
   const add = (e: React.FormEvent) => {
     e.preventDefault();
-    const ingPirate = pirateify(ingNormal);
     if (!name.trim() || !ingNormal.trim()) return;
-    setCocktails([
-      ...cocktails,
+
+    setCocktails(prev => [
+      ...prev,
       {
         name: name.trim(),
-        ingredientsPirate: ingPirate,
+        ingredientsPirate: pirateify(ingNormal.trim()),
         ingredientsNormal: ingNormal.trim(),
       },
     ]);
+
     setName('');
     setIngNormal('');
     setToast('☠️ Aye! Added to the hold!');
@@ -126,8 +141,7 @@ export default function CocktailMenu() {
   };
 
   const remove = (index: number) => {
-    const updated = cocktails.filter((_, i) => i !== index);
-    setCocktails(updated);
+    setCocktails(prev => prev.filter((_, i) => i !== index));
     setToast('💀 Drink tossed overboard!');
     setTimeout(() => setToast(''), 2000);
   };
@@ -175,6 +189,7 @@ export default function CocktailMenu() {
         <button
           onClick={generatePDF}
           className="bg-green-600 text-white px-4 py-2 rounded"
+          disabled={downloading}
         >
           📜 Download Captain's Menu (PDF)
         </button>
@@ -201,10 +216,7 @@ export default function CocktailMenu() {
 
           <ul className="space-y-5">
             {cocktails.map((c, i) => (
-              <li
-                key={i}
-                className="bg-transparent border-none p-4 hover:scale-[1.02] transition-all"
-              >
+              <li key={i} className="bg-transparent border-none p-4 hover:scale-[1.02] transition-all">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-2xl font-bold text-yellow-800 mb-1">🍹 {c.name}</p>
