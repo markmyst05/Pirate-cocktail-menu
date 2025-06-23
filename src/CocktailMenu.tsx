@@ -59,17 +59,18 @@ export default function CocktailMenu() {
     const element = document.getElementById('menu-section');
     if (!element) return;
 
-    import('html2pdf.js').then(({ default: html2pdf }) => {
-      html2pdf()
-        .set({
-          margin: 0,
-          filename: 'captains-menu.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-        })
-        .from(element)
-        .save();
+    import('html2pdf.js').then(html2pdf => {
+    
+      html2pdf.default()
+  .set({
+    margin: 0,
+    filename: 'captains-menu.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+  })
+  .from(element)
+  .save();
     });
   }
 
@@ -138,8 +139,7 @@ export default function CocktailMenu() {
           {showMenu ? "Hide Captain's Menu 🫥" : "Show Captain's Menu ☠️"}
         </button>
 
-        <button
-          onClick={generatePDF}
+        <button onClick={generatePDF}>Export as PDF</button>
           className="bg-green-600 text-white px-4 py-2 rounded"
         >
           📜 Download Captain's Menu (PDF)
