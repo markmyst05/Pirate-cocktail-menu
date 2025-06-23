@@ -1,8 +1,22 @@
-import React, { useState, useEffect } from 'react'; import { pirateify } from './utils/pirateify';
+import React, { useState, useEffect } from 'react';
+import { pirateify } from './utils/pirateify';
 
-// Types type Cocktail = { name: string; ingredientsPirate: string; ingredientsNormal: string; };
+// Debounce hook
+function useDebounce<T>(value: T, delay = 300): T {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debounced;
+}
 
-// Debounce hook function useDebounce<T>(value: T, delay = 300): T { const [debounced, setDebounced] = useState(value); useEffect(() => { const handler = setTimeout(() => setDebounced(value), delay); return () => clearTimeout(handler); }, [value, delay]); return debounced; }
+// Types
+type Cocktail = {
+  name: string;
+  ingredientsPirate: string;
+  ingredientsNormal: string;
+};
 
 export default function CocktailMenu() { const [cocktails, setCocktails] = useState<Cocktail[]>(() => { if (typeof window !== 'undefined') { const stored = localStorage.getItem('cocktails'); if (stored) { try { return JSON.parse(stored); } catch {} } const defaultCocktails = [ { name: 'Negroni', ingredientsPirate: 'a splash o’ th’ juniper juice, sweet loot, n’ crimson cannonfire', ingredientsNormal: 'Gin, Vermouth, Campari', }, ]; localStorage.setItem('cocktails', JSON.stringify(defaultCocktails)); return defaultCocktails; } return []; });
 
