@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.5.2",
+    "html2pdf.js": "^0.10.3",
     "qrcode.react": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

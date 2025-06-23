@@ -7,25 +7,28 @@ function preserveCapitalization(original: string, replacement: string): string {
   return replacement;
 }
 
-function chooseRandom(value: string | string[]): string {
-  if (Array.isArray(value)) {
-    return value[Math.floor(Math.random() * value.length)];
-  }
-  return value;
-}
-
 export function pirateify(text: string): string {
+  const phrases = Object.keys(pirateDict)
+    .filter(key => key.includes(' '))
+    .sort((a, b) => b.length - a.length); // longest phrases first
+
   let result = text;
 
-  // Handle phrase replacements first (longest first)
-  const phrases = Object.keys(pirateDict).sort((a, b) => b.length - a.length);
+  // Step 1: Replace phrases
   for (const phrase of phrases) {
     const regex = new RegExp(`\\b${phrase}\\b`, 'gi');
-    result = result.replace(regex, (match) => {
-      const pirateWord = pirateDict[phrase];
-      return preserveCapitalization(match, chooseRandom(pirateWord));
-    });
+    result = result.replace(regex, match =>
+      preserveCapitalization(match, pirateDict[phrase])
+    );
   }
+
+  // Step 2: Replace single words (excluding phrases)
+  const wordsOnly = Object.keys(pirateDict).filter(key => !key.includes(' '));
+  const wordRegex = new RegExp(`\\b(${wordsOnly.join('|')})\\b`, 'gi');
+
+  result = result.replace(wordRegex, match =>
+    preserveCapitalization(match, pirateDict[match.toLowerCase()])
+  );
 
   return result;
 }
