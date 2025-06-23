@@ -7,7 +7,7 @@
 /* Apply global font and background */
 body {
   @apply bg-parchment text-rum font-pirate;
-  background-image: url('/images/treasure-map.jpg'), url('/images/burned-edges.png');
+  background-image: url('/images/treasure-map.jpg');
   background-size: cover, contain;
   background-repeat: no-repeat;
   background-position: center, center;
@@ -16,10 +16,6 @@ body {
   font-family: 'Pirata One', cursive;
 }
 
-/* Custom class for parchment background color (defined in Tailwind config) */
-.bg-parchment {
-  background-color: #f8f1dc;
-}
 
 /* Optional: Torn border styling (used inline in JSX, but you can reuse here) */
 .torn-border {

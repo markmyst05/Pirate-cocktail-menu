@@ -1,6 +1,5 @@
-
 module.exports = {
-  content:["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       fontFamily: {
@@ -12,8 +11,11 @@ module.exports = {
         bloodred: '#7c0a02',
         rum: '#3e2723',
         sea: '#0077b6',
+      },
+      animation: {
+        'spin-slow': 'spin 2s linear infinite',
       }
     }
   },
-  plugins: []
+  plugins: [],
 }

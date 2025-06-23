@@ -26,7 +26,7 @@ export default function App() {
       <div className="relative z-20">
         <header className="text-center py-12">
           <h1 className="text-5xl text-rum drop-shadow-lg">🏴‍☠️ The Drunken Parrot</h1>
-          <p className="mt-2 italic text-lg text-treasure">Sail in for a legendary sip...</p>
+          <p className="mt-2 italic text-lg text-black">Sail in for a legendary sip...</p>
         </header>
 
         <main className="max-w-4xl mx-auto px-4 relative">
