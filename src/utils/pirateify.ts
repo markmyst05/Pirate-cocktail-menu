@@ -52,3 +52,22 @@ export function pirateify(text: string): string {
   
   return result;
 }
+import pirateDict from './pirateDictionary';
+
+export function pirateify(text: string): string {
+  if (!text.trim()) return '';
+  
+  let result = text.toLowerCase();
+  
+  // Replace words based on dictionary
+  Object.entries(pirateDict).forEach(([key, value]) => {
+    const regex = new RegExp(`\\b${key}\\b`, 'gi');
+    result = result.replace(regex, value);
+  });
+  
+  // Add some pirate flair
+  result = result.replace(/\band\b/g, "n'");
+  result = result.replace(/\bthe\b/g, "th'");
+  
+  return result;
+}
