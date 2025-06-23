@@ -57,19 +57,48 @@ export default function CocktailMenu() {
 
   function generatePDF() {
     const element = document.getElementById('menu-section');
-    if (!element) return;
+    if (!element) {
+      console.error('Menu section not found');
+      return;
+    }
+
+    // Show loading feedback
+    setToast('🏴‍☠️ Preparing yer menu for download...');
 
     import('html2pdf.js').then(({ default: html2pdf }) => {
+      const options = {
+        margin: 0.5,
+        filename: 'captains-menu.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          allowTaint: true 
+        },
+        jsPDF: { 
+          unit: 'in', 
+          format: 'letter', 
+          orientation: 'portrait' 
+        }
+      };
+
       html2pdf()
-        .set({
-          margin: 0,
-          filename: 'captains-menu.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        })
+        .set(options)
         .from(element)
-        .save();
+        .save()
+        .then(() => {
+          setToast('⚓ Menu downloaded successfully!');
+          setTimeout(() => setToast(''), 2000);
+        })
+        .catch((error) => {
+          console.error('PDF generation failed:', error);
+          setToast('💀 Failed to download menu');
+          setTimeout(() => setToast(''), 2000);
+        });
+    }).catch((error) => {
+      console.error('Failed to load html2pdf library:', error);
+      setToast('💀 Failed to load PDF library');
+      setTimeout(() => setToast(''), 2000);
     });
   }
 
