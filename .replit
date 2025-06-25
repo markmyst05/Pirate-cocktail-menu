@@ -25,6 +25,14 @@ localPort = 5174
 externalPort = 3000
 exposeLocalhost = true
 
+[[ports]]
+localPort = 5175
+externalPort = 3001
+exposeLocalhost = true
+
+[[ports]]
+localPort = 5176
+
 [workflows]
 runButton = "Start Dev Server"
 
