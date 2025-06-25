@@ -5,7 +5,6 @@ entrypoint = "src/App.tsx"
 
 [nix]
 channel = "stable-24_05"
-packages = ["openssh", "zip"]
 
 [unitTest]
 language = "nodejs"
@@ -18,29 +17,3 @@ publicDir = "dist"
 [[ports]]
 localPort = 5173
 externalPort = 80
-exposeLocalhost = true
-
-[[ports]]
-localPort = 5174
-externalPort = 3000
-exposeLocalhost = true
-
-[[ports]]
-localPort = 5175
-externalPort = 3001
-exposeLocalhost = true
-
-[[ports]]
-localPort = 5176
-
-[workflows]
-runButton = "Start Dev Server"
-
-[[workflows.workflow]]
-name = "Start Dev Server"
-author = 44096526
-mode = "sequential"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "npm run dev"
