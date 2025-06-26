@@ -1,36 +1,20 @@
 {
-  "name": "drunken-parrot",
+  "name": "pirate-cocktail-menu",
   "version": "1.0.0",
-  "homepage": "https://markmyst05.github.io/Pirate-cocktail-menu",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/markmyst05/Pirate-cocktail-menu.git"
-  },
+  "private": true,
+  "homepage": "https://markmyst05.github.io/Pirate-cocktail-menu/",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --repo=https://github.com/markmyst05/Pirate-cocktail-menu.git"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "html2pdf.js": "^0.10.3",
-    "qrcode.react": "^4.2.0",
+    "nanoid": "^5.1.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-qrcode-logo": "^3.0.0",
-    "react-typical": "^0.1.3"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.5.2",
-    "autoprefixer": "^10.4.14",
-    "gh-pages": "^6.3.0",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.3.2",
-    "tsx": "^4.20.3",
-    "typescript": "^5.0.4",
-    "vite": "^4.3.9"
+    "@vitejs/plugin-react": "^4.1.0",
+    "vite": "^5.2.0"
   }
 }
